@@ -43,8 +43,11 @@ sed -i "s/hostname='.*'/hostname='$WRT_NAME'/g" $CFG_FILE
 rm -rf ./feeds/packages/lang/golang
 git clone -b 25.x https://github.com/sbwml/packages_lang_golang ./feeds/packages/lang/golang
 
-#修复singbox调用golang-package
-#sed -i 's|include \.\./\.\./lang/golang/golang-package\.mk|include $(TOPDIR)/feeds/packages/lang/golang/golang-package.mk|' ./feeds/packages/net/sing-box/Makefile
+#修复dropbear
+#sed -i "s/Interface/DirectInterface/" ./package/network/services/dropbear/files/dropbear.config
+sed -i "/Interface/d" ./package/network/services/dropbear/files/dropbear.config
+#拷贝files 文件夹到编译目录
+cp -r ../files ./
 
 #配置文件修改
 echo "CONFIG_PACKAGE_luci=y" >> ./.config
