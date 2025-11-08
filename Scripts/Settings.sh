@@ -40,8 +40,7 @@ sed -i "s/192\.168\.[0-9]*\.[0-9]*/$WRT_IP/g" $CFG_FILE
 sed -i "s/hostname='.*'/hostname='$WRT_NAME'/g" $CFG_FILE
 
 #修改LCP阈值间隔 3次 10秒
-# 修改ppp.sh中的默认keepalive设置
-sed -i 's/keepalive="5 1"/keepalive="3 10"/' ./package/network/services/ppp/files/ppp.sh
+sed -i '126s/keepalive="5 1"/keepalive="3 10"/' ./package/network/services/ppp/files/ppp.sh
 
 #修复dropbear
 #sed -i "s/Interface/DirectInterface/" ./package/network/services/dropbear/files/dropbear.config
