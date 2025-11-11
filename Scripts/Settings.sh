@@ -55,6 +55,9 @@ fi
 #sed -i "s/Interface/DirectInterface/" ./package/network/services/dropbear/files/dropbear.config
 sed -i "/Interface/d" ./package/network/services/dropbear/files/dropbear.config
 
+#拷贝files 文件夹到编译目录
+cp -r ../files ./
+
 #配置文件修改
 echo "CONFIG_PACKAGE_luci=y" >> ./.config
 echo "CONFIG_LUCI_LANG_zh_Hans=y" >> ./.config
