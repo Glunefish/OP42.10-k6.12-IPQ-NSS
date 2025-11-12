@@ -1,14 +1,5 @@
 #!/bin/bash
 
-# 强制清理缓存，确保修改生效
-echo "清理编译缓存..."
-make package/network/services/dnsmasq/clean 2>/dev/null || true
-make package/network/services/ppp/clean 2>/dev/null || true
-make package/base-files/clean 2>/dev/null || true
-
-# 删除可能存在的缓存目录
-rm -rf ./tmp/ ./build_dir/target-*/dnsmasq-*/ ./build_dir/target-*/ppp-*/ 2>/dev/null || true
-
 #修改默认主题
 sed -i "s/luci-theme-bootstrap/luci-theme-$WRT_THEME/g" $(find ./feeds/luci/collections/ -type f -name "Makefile")
 
