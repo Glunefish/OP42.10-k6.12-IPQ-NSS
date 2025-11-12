@@ -15,11 +15,17 @@ else
     exit 1
 fi
 
-# 修改 PPP keepalive 设置 - 只替换数字
+# 修改 PPP keepalive 设置 - 修复sed命令
 ppp_sh_file="./package/network/services/ppp/files/ppp.sh"
 if [ -f "$ppp_sh_file" ]; then
     echo "修改 PPP keepalive 配置..."
-    sed -i '/keepalive.*5.*1/s/5 1/3 10/' "$ppp_sh_file"
+    # 方法1：直接替换默认值
+    sed -i 's/keepalive="5 1"/keepalive="3 10"/' "$ppp_sh_file"
+    
+    # 方法2：如果方法1没匹配到，尝试其他格式
+    if ! grep -q 'keepalive="3 10"' "$ppp_sh_file"; then
+        sed -i 's/keepalive=\"5 1\"/keepalive=\"3 10\"/' "$ppp_sh_file"
+    fi
 else
     echo "错误: 未找到 ppp.sh 文件"
     exit 1
