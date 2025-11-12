@@ -6,32 +6,31 @@ sed -i "s/luci-theme-bootstrap/luci-theme-$WRT_THEME/g" $(find ./feeds/luci/coll
 #修改immortalwrt.lan关联IP
 sed -i "s/192\.168\.[0-9]*\.[0-9]*/$WRT_IP/g" $(find ./feeds/luci/modules/luci-mod-system/ -type f -name "flash.js")
 
-#修改DHCP客户数
+#修改DHCP客户数 - 只替换数字
 dhcp_conf_file=$(find ./package/network/services/dnsmasq/files/ -type f -name "dhcp.conf")
 if [ -n "$dhcp_conf_file" ] && [ -f "$dhcp_conf_file" ]; then
-    sed -i 's/option limit\t150/option limit\t100/' "$dhcp_conf_file" || \
-    sed -i 's/option limit    150/option limit    100/' "$dhcp_conf_file"
+    sed -i '/limit.*150/s/150/100/' "$dhcp_conf_file"
 else
     echo "错误: 未找到 dhcp.conf 文件"
     exit 1
 fi
 
-# 修改LCP阈值间隔 3次 10秒
-# 修改 PPP keepalive 设置
+# 修改 PPP keepalive 设置 - 只替换数字
 ppp_sh_file="./package/network/services/ppp/files/ppp.sh"
 if [ -f "$ppp_sh_file" ]; then
     echo "修改 PPP keepalive 配置..."
-    sed -i 's/keepalive="5 1"/keepalive="3 10"/' "$ppp_sh_file"
+    sed -i '/keepalive.*5.*1/s/5 1/3 10/' "$ppp_sh_file"
 else
     echo "错误: 未找到 ppp.sh 文件"
     exit 1
 fi
+
 # 验证修改
 echo "修改结果验证："
 echo "DHCP 配置:"
-grep "option limit" "$dhcp_conf_file"
+grep "limit" "$dhcp_conf_file"
 echo "PPP 配置:"
-grep 'keepalive="3 10"' "$ppp_sh_file"
+grep "keepalive" "$ppp_sh_file"
 
 #添加编译日期标识
 sed -i "s/(\(luciversion || ''\))/(\1) + (' \/ $WRT_MARK-$WRT_DATE')/g" $(find ./feeds/luci/modules/luci-mod-status/ -type f -name "10_system.js")
